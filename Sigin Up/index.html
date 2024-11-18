@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-top: 100px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #3f28a7;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #3c2188;
+    }
+
+    p {
+      text-align: center;
+    }
+    #sec2 {
+      display: none;
+    }
+  </style>
+
+  <body>
+    <section id="sec1">
+      <div class="container">
+        <h1>Sign In</h1>
+        <div>
+          <input type="text" placeholder="First Name" id="firstName" />
+          <input type="text" placeholder="Last Name" id="lastname" />
+          <input id="username" type="text" placeholder="Username" />
+          <input id="email" type="email" placeholder="Email" />
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            required
+          />
+          <input
+            id="confirm"
+            type="password"
+            placeholder="Confirm Password"
+            required
+          />
+          <button onclick="submitSign()">Sign In</button>
+        </div>
+        <p>
+          Already have an account?
+          <button onclick="windowLogin()">Login</button>
+        </p>
+      </div>
+    </section>
+
+    <section id="sec2">
+      <div class="container">
+        <h1>Login</h1>
+        <div>
+          <input id="email2" type="email" placeholder="email" />
+          <input id="password2" type="password" placeholder="Password" />
+          <button onclick="submitLogin()">Login</button>
+        </div>
+        <p>
+          Don't have an account?
+          <button onclick="windowSigin()">Sign In</button>
+        </p>
+      </div>
+    </section>
+  </body>
+  <script>
+    let sec1 = document.getElementById("sec1");
+    let sec2 = document.getElementById("sec2");
+    const firstName = document.getElementById("firstName");
+    const lastname = document.getElementById("lastname");
+    const username = document.getElementById("username");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const confirmPass = document.getElementById("confirm");
+    let email2 = document.getElementById("email2");
+    let password2 = document.getElementById("password2");
+    // const userData
+    function windowLogin() {
+      sec1.style.display = "none";
+      sec2.style.display = "block";
+    }
+    // sec2.style.display = "none";
+    function windowSigin() {
+      sec1.style.display = "block";
+      sec2.style.display = "none";
+    }
+    const userData = [];
+
+    function submitSign() {
+      // const userData = JSON.parse(loc`alStorage.getItem("database"));
+      const user = {
+        firstName: firstName.value,
+        lastname: lastname.value,
+        username: username.value,
+        email: email.value,
+        password: password.value,
+      };
+
+      let userExists = false;
+
+      for (let index = 0; index < userData.length; index++) {
+        if (userData[index].email === email.value) {
+          userExists = true;
+        }
+      }
+
+      if (
+        password.value === "" ||
+        username.value === "" ||
+        email.value === ""
+      ) {
+        alert("All fields are mandatory!!");
+        return;
+      } else if (password.value !== confirmPass.value) {
+        alert("Password does not match");
+        return;
+      } else if (userExists) {
+        alert("User already exists");
+        return;
+      } else {
+        userData.push(user);
+        localStorage.setItem("database", JSON.stringify(userData));
+        window.location.href = "./home.html";
+      }
+    }
+
+    function submitLogin() {
+      // const userData = JSON.parse(localStorage.getItem("database"));
+      // console.log(userData);
+      const userData = JSON.parse(localStorage.getItem("database"));
+      // let storedDetails = JSON.parse(localStorage.getItem("database"));
+      let storedDetails = userData.find(
+        (data) =>
+          data.email === email2.value && data.password === password2.value
+      );
+      // console.log(data.email);
+      
+      let newEmail = email2.value;
+      let newPassword = password2.value;
+      if (email2.value === "" || password2.value === "") {
+        alert("All fields are mandatory!!");
+        return;
+      } else if (storedDetails) {
+        alert("Login successful!");
+        window.location.href = "./home.html";
+      } else {
+        alert("User not found, try sigining up");
+      }
+      // if (user) {
+      //   alert("Login successful!");
+      //   window.location.href = "./home.html";
+      // } else {
+      //   alert("Username or password does not match");
+      // }
+    }
+
+    // function submitLogin() {
+
+    //   // if (password2 === "" || username2 === "") {
+    //   //   alert("All fields are mandatory!!");
+    //   // } else if (password2 || username2 === "database") {
+    //   //   // alert('Congratulations')
+    //   //   window.location.href = "./home.html";
+    //   // } else {
+    //   //   alert("Username or password does not match");
+    //   // }
+    // }
+  </script>
+</html>

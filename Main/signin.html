@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../src/output.css">
+</head>
+
+<style>
+  #sign{
+    display: none;
+  }
+</style>
+<body>
+  <section id="createacct" class="bg-cover bg-center h-screen" style="background-image: url(../image/15694584_5639448.jpg);">
+    <div class="flex flex-col items-center justify-center h-full bg-black bg-opacity-40 text-white">
+      <h1>WELCOME TO TECHNIA'S QUIZ COMPETITION</h1>
+      <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
+        <h1 class="text-3xl font-bold text-center text-gray-700 mb-6">Create Account</h1>
+
+       
+        <div class="space-y-4">
+           
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">First Name</label>
+                <input type="text" id="name" name="name" required class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+           
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                <input type="email" id="email" name="email" required class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+           
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" name="password" required class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+          
+            <div>
+                <label for="confirm_password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirm_password" required class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+           
+            <button onclick="generateCode()" class="w-full bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-400 transition duration-200">
+                Create Account
+            </button>
+          </div>
+
+   
+        <p class="text-center text-sm text-gray-500 mt-6">
+            Already have an account? <a id="signinLink" href="#" class="text-blue-500 hover:underline">Sign In</a>
+        </p>
+    </div>
+  </div>
+  </section>
+    
+
+
+
+  <section id="sign" class="bg-cover bg-center h-screen" style="background-image: url(../image/15694584_5639448.jpg);">
+    <div class="flex flex-col items-center justify-center h-full bg-black bg-opacity-40 text-white">
+      <h1>WELCOME TO TECHNIA'S QUIZ COMPETITION</h1>
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
+      <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Signin</h1>
+  
+      <p class="text-gray-600 text-center mb-4">Enter your 4-digit PIN to continue</p>
+  
+     
+      <div class="flex justify-center space-x-4 mb-6">
+          <input id="studentCode" type="text" maxlength="4" class="w-15 h-15 border border-gray-300 rounded-lg text-center text-lg font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          
+      </div>
+  
+     
+      <button onclick="submitCode()" class="w-full bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-400 transition duration-200">
+          Continue
+      </button>
+  
+      
+      <p class="text-center text-gray-500 text-sm mt-4">
+          Don't have a Pin? <a id="createAcctLink" href="#" class="text-blue-500 hover:underline">Create an account</a>
+      </p>
+  </div>
+  </div>
+  </section>
+    </body>
+
+    <script>
+      const signinLink = document.getElementById("signinLink");
+      const createAcctLink = document.getElementById("createAcctLink");
+      const signinPage = document.getElementById("sign");
+      const createacctPage = document.getElementById("createacct");
+      const studentName = document.getElementById("name");
+      const studentEmail = document.getElementById("email");
+      const studentPassword = document.getElementById("password");
+      const confirmPassword = document.getElementById("confirmPassword");
+      const studentPin = document.getElementById("studentCode");
+
+      const studentData = []
+      let code = ''
+
+      function getCode() {
+        code = Math.floor(Math.random() * 9000);
+        // console.log(code);
+        
+      }
+      getCode();
+      
+      function generateCode() {
+        const student = {
+          name: studentName.value,
+          email: studentEmail.value,
+          password: studentPassword.value,
+          pin: code
+        }
+        // console.log(student.pin);
+
+        let studentExist = false;
+        // console.log(studentPassword.value);
+
+        for (let index = 0; index < studentData.length; index++) {
+          if (studentData[index].email === student.email) {
+            studentExist = true;
+            break;
+          }
+        }
+
+        if (studentPassword.value === '' || studentEmail.value === '' || studentName.value === '') {
+          alert('Please fill all the fields');
+          
+        }else if (studentPassword.value !== confirmPassword.value) {
+          alert('Password does not match');
+        }else if (studentExist) {
+          alert('Student already already has a code');
+        }else {
+          studentData.push(student);
+          localStorage.setItem('studentDatabase', JSON.stringify(studentData));
+          alert(`Code generated successfully, ${student.pin}`);
+          createacctPage.style.display = "none";
+          signinPage.style.display = "block";
+        }
+
+        
+        
+        getCode();
+      }
+    
+     
+
+      function submitCode() {
+    const studentData = JSON.parse(localStorage.getItem('studentDatabase'));
+
+
+    let storedDetails = studentData.find((data) => data.pin === parseInt(studentPin.value));
+
+    if (studentPin.value === '') {
+      alert('Please enter your code');
+    } else if (storedDetails) {
+      alert(`${storedDetails.name} Logged in successfully`);
+      window.location.href = "choose.html";
+    } else {
+      alert('Invalid code or Please create an account');
+    }
+  }
+
+      signinLink.addEventListener("click", function() {
+          signinPage.style.display = "block";
+          createacctPage.style.display = "none";
+
+          
+      });
+
+      createAcctLink.addEventListener("click", function() {
+          signinPage.style.display = "none";
+          createacctPage.style.display = "block";
+         
+      });
+
+      
+      </script>
+
+
+</html>

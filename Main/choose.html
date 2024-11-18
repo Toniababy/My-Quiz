@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../src/output.css">
+</head>
+<body class="bg-cover bg-center h-screen bg-black bg-opacity-40 flex items-center justify-center" style="background-image: url(../image/15694584_5639448.jpg);"></body>>
+
+    
+    <div class="text-center text-white p-6 max-w-3xl bg-black bg-opacity-50 rounded-lg shadow-lg">
+       
+        <h1 class="text-4xl font-bold mb-4">Welcome to Technia Quiz Competition</h1>
+
+    
+        <p class="text-lg mb-6">
+            Feel free to choose any of the question set available. 
+
+            Good Luck! 🎉
+        </p>
+
+    
+        <div class="space-y-4">
+            <button onclick="random()" class="px-6 py-3 bg-blue-500 text-white rounded-lg shadow-lg text-lg font-semibold hover:bg-blue-600 transition">Random Question</button>
+            <button onclick="difficult()" class="px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg text-lg font-semibold hover:bg-red-600 transition">Difficult Question</button>
+            <button onclick="easy()" class="px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg text-lg font-semibold hover:bg-green-600 transition">Easy Question</button>
+            <!-- <button onclick="" class="px-6 py-3 bg-yellow-500 text-white rounded-lg shadow-lg text-lg font-semibold hover:bg-yellow-600 transition">Special Question</button> -->
+        </div>
+
+       
+        
+       
+    </div>
+
+</body>
+<script>
+   function random() {
+    
+         window.location.href = "random.html";
+     
+   }
+   function difficult() {
+    
+         window.location.href = "difficult.html";
+     
+   }
+   function easy() {
+    
+         window.location.href = "easy.html";
+     
+   }
+</script>
+</html>

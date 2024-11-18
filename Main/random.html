@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Application</title>
+    <link rel="stylesheet" href="../src/output.css" />
+  </head>
+  <!-- <style>
+ #question-number, #question-text, #options-container, #timer { border: 2px solid red; }
+</style> -->
+  <body>
+    <section
+      class="bg-cover bg-center h-screen"
+      style="background-image: url(../image/15694584_5639448.jpg)"
+    >
+      <div
+        class="flex flex-col justify-center items-center h-full bg-black bg-opacity-50"
+      >
+        <h1 class="text-4xl font-bold text-white mb-6">Quiz Application</h1>
+        <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+          <p class="mt-4 text-center text-lg font-semibold" id="scoreValue"></p>
+          <div class="text-end text-sm font-bold mb-4">
+            Time Left: <span id="timer" class="text-red-500">5</span> seconds
+          </div>
+          <h2
+            id="question-number"
+            class="text-xl font-semibold text-gray-800 mb-4"
+          >
+            Question 1 of 5
+          </h2>
+          <p id="question-text" class="text-gray-700 mb-6">
+            What is the capital of France?
+          </p>
+          <div id="options-container" class="space-y-2">
+            <!-- Options will be dynamically generated here -->
+          </div>
+          <div class="flex justify-between mt-6">
+            <button
+              onclick="prevQuestion()"
+              id="prevBtn"
+              class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            >
+              Previous
+            </button>
+
+            <button
+              onclick="back()"
+              id="backBtn"
+              class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            >
+              Back to home page
+            </button>
+
+            <button
+              onclick="nextQuestion()"
+              id="nextBtn"
+              class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Next
+            </button>
+          </div>
+          <div class="mt-6">
+            <button
+              onclick="submitQuiz()"
+              id="submitBtn"
+              class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script>
+  let questionNum = document.getElementById("question-number");
+  let questionText = document.getElementById("question-text");
+  let optionsContainer = document.getElementById("options-container");
+  let prevBtn = document.getElementById("prevBtn");
+  let nextBtn = document.getElementById("nextBtn");
+  let submitBtn = document.getElementById("submitBtn");
+  let timer = document.getElementById("timer");
+  let backBtn = document.getElementById("backBtn");
+
+  backBtn.style.display = "none";
+  
+  const quizQuestions = [
+      {
+          question: "How many minutes are in a full week",
+          answer: "10080",
+          options: ["10080", "10000", "100000", "1000000"],
+      },
+      {
+          question: "What is the 4th letter of the Greek alphabet",
+          answer: "delta",
+          options: ["alpha", "beta", "gamma", "delta"],
+      },
+      {
+          question: "How many dots appear on a pair of dice?",
+          answer: "42",
+          options: ["6", "12", "42", "24"],
+      },
+      {
+          question: "How many colours are in Nigeria's Flag?",
+          answer: "2",
+          options: ["3", "4", "2", "5"],
+      },
+      {
+          question: "The presence of what can cause hardness of water?",
+          answer: "Calcium",
+          options: ["Calcium", "Phosphate", "Iron", "Sodium"],
+      },
+      {
+          question: "Matter is anything that takes up space and has mass",
+          answer: "True",
+          options: ["False", "True"],
+      },
+  ];
+  
+  let currentQuestionIndex = 0;
+  let score = 0;
+  let selectedAnswers = {};
+  let timerInterval;
+  let timeLeft = 8;
+  let isSubmitted = false; 
+  
+  window.onload = () => {
+      loadQuestion();
+      startTimer();
+  };
+  
+  function loadQuestion() {
+      if (isSubmitted) return; 
+      const question = quizQuestions[currentQuestionIndex];
+      questionNum.textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+      questionText.textContent = question.question;
+  
+      optionsContainer.innerHTML = "";
+  
+      question.options.forEach((option, index) => {
+          const isChecked = selectedAnswers[currentQuestionIndex] === option ? "checked" : "";
+          optionsContainer.innerHTML += `
+              <span class="d-flex gap-2 align-items-center">
+                  <input type="radio" name="opt" id="option${index}" value="${option}" ${isChecked}>
+                  ${option}
+              </span>
+          `;
+      });
+  
+      prevBtn.disabled = currentQuestionIndex === 0;
+      nextBtn.disabled = currentQuestionIndex === quizQuestions.length - 1;
+      resetTimer();
+  }
+  
+  function startTimer() {
+      timerInterval = setInterval(() => {
+          if (isSubmitted) {
+              clearInterval(timerInterval); 
+              return;
+          }
+  
+          if (timeLeft <= 0) {
+              if (currentQuestionIndex < quizQuestions.length - 1) {
+                  nextQuestion();
+              } else {
+                  submitQuiz();
+              }
+          } else {
+              timer.textContent = `Time Left: ${timeLeft}`;
+              timeLeft--;
+          }
+      }, 1000);
+  }
+  
+  function resetTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 8;
+      timer.textContent = `Time Left: ${timeLeft}`;
+      startTimer();
+  }
+  
+  function nextQuestion() {
+      if (isSubmitted) return; 
+      saveAnswer();
+      if (currentQuestionIndex < quizQuestions.length - 1) {
+          currentQuestionIndex++;
+          loadQuestion();
+      } else {
+          submitQuiz();
+      }
+  }
+  
+  function prevQuestion() {
+      if (isSubmitted) return; 
+  
+      saveAnswer();
+      if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          loadQuestion();
+      }
+  }
+  
+  function saveAnswer() {
+      if (isSubmitted) return; 
+  
+      let optionSelected = document.querySelector('input[name="opt"]:checked');
+      if (optionSelected) {
+          selectedAnswers[currentQuestionIndex] = optionSelected.value;
+      }
+  }
+  
+  function submitQuiz() {
+      if (isSubmitted) return; 
+  
+      isSubmitted = true; 
+      clearInterval(timerInterval); 
+  
+      saveAnswer(); 
+  
+      score = 0; 
+      quizQuestions.forEach((question, index) => {
+          if (selectedAnswers[index] === question.answer) {
+              score++;
+          }
+      });
+  
+      
+      document.getElementById("scoreValue").textContent = `You got ${score} out of ${quizQuestions.length} questions correct!`;
+  
+      
+      prevBtn.disabled = true;
+      nextBtn.disabled = true;
+      submitBtn.disabled = true;
+      optionsContainer.innerHTML = ""; 
+      questionNum.textContent = ""; 
+      questionText.textContent = "Quiz Completed!"; 
+      backBtn.style.display = "block";
+  }
+
+  function back() {
+    window.location.href = "choose.html";
+  }
+</script>
+</html>
